@@ -1,0 +1,17 @@
+service: election-guide-cors-proxy
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: us-east-1
+  stage: prod
+functions:
+  proxy:
+    handler: handler.handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+
+plugins:
+  - serverless-offline
