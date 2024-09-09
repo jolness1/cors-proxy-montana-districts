@@ -2,8 +2,8 @@ service: election-guide-cors-proxy
 
 provider:
   name: aws
-  runtime: nodejs22.x
-  region: us-east-1
+  runtime: nodejs20.x
+  region: us-west-2
   stage: prod
 functions:
   proxy:
