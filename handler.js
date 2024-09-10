@@ -1,6 +1,19 @@
 const axios = require('axios');
 
 exports.handler = async (event) => {
+    // Handle preflight OPTIONS request
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            },
+            body: '', // No body needed with OPTIONS
+        };
+    }
+
     const queryStringParameters = event.queryStringParameters || {};
     const path = event.path;
     
@@ -14,6 +27,11 @@ exports.handler = async (event) => {
     } else {
         return {
             statusCode: 400,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            },
             body: JSON.stringify({ error: 'Invalid endpoint' }),
         };
     }
@@ -33,6 +51,11 @@ exports.handler = async (event) => {
         console.error('Error:', error);
         return {
             statusCode: 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            },
             body: JSON.stringify({ error: 'An error occurred' }),
         };
     }
