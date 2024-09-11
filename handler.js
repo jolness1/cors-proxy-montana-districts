@@ -32,31 +32,46 @@ exports.handler = async (event) => {
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             },
-            body: JSON.stringify({ error: 'Invalid endpoint' }),
+            body: JSON.stringify({ error: 'Invalid endpoint',
+            message: error.message,
+            details: error.response ? error.response.data : null
+            }),
         };
     }
 
     try {
-        const response = await axios.get(url, { params: queryStringParameters });
+        const response = await axios.get(url, { 
+            params: queryStringParameters,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        
         return {
             statusCode: 200,
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(response.data),
         };
     } catch (error) {
         console.error('Error:', error);
         return {
-            statusCode: 500,
+            statusCode: error.response ? error.response.status : 500,
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ error: 'An error occurred' }),
+            body: JSON.stringify({ 
+                error: 'An error occurred', 
+                message: error.message,
+                details: error.response ? error.response.data : null
+            }),
         };
     }
 };
